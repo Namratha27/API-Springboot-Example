@@ -1,16 +1,36 @@
 package com.applecoderpad.inventory.model;
 
 import com.applecoderpad.inventory.exception.ConflictException;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.time.Instant;
 
+@Entity
+@Table(name = "products")
 public class Product {
-  private final String sku;
-  private final String name;
-  private final int reorderThreshold;
+  @Id private String sku;
+
+  @Column(nullable = false)
+  private String name;
+
+  @Column(nullable = false)
+  private int reorderThreshold;
+
+  @Column(nullable = false)
   private int onHand;
+
+  @Column(nullable = false)
   private int reserved;
+
+  @Column(name = "entity_version", nullable = false)
   private long version;
+
+  @Column(nullable = false)
   private Instant updatedAt;
+
+  protected Product() {}
 
   private Product(String sku, String name, int onHand, int reorderThreshold) {
     this.sku = sku;

@@ -1,24 +1,61 @@
 package com.applecoderpad.support.model;
 
 import com.applecoderpad.support.exception.ConflictException;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Table;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Entity
+@Table(name = "support_tickets")
 public class SupportTicket {
-  private final UUID id;
-  private final String customerId;
-  private final String category;
-  private final String subject;
-  private final String description;
-  private final List<TicketComment> comments = new ArrayList<>();
-  private final Instant createdAt;
-  private final Instant slaDueAt;
+  @Id private UUID id;
+
+  @Column(nullable = false)
+  private String customerId;
+
+  @Column(nullable = false)
+  private String category;
+
+  @Column(nullable = false)
+  private String subject;
+
+  @Column(nullable = false, length = 4096)
+  private String description;
+
+  @ElementCollection
+  @CollectionTable(name = "support_ticket_comments", joinColumns = @JoinColumn(name = "ticket_id"))
+  private List<TicketComment> comments = new ArrayList<>();
+
+  @Column(nullable = false)
+  private Instant createdAt;
+
+  @Column(nullable = false)
+  private Instant slaDueAt;
+
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   private volatile TicketPriority priority;
+
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   private volatile TicketStatus status;
+
   private volatile String assigneeId;
+
+  @Column(nullable = false)
   private volatile Instant updatedAt;
+
+  protected SupportTicket() {}
 
   private SupportTicket(
       UUID id,

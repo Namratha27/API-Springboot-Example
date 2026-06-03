@@ -4,7 +4,7 @@ Practical Spring Boot implementations for senior backend CoderPad preparation. E
 
 This repo favors code you can explain under interview pressure: clear domain models, thread-safe in-memory stores, idempotency where it matters, outbound `RestClient` integrations for external dependencies, and extension points for production storage, queues, Redis, and observability.
 
-Start with the [`INTERVIEW_PLAYBOOK.md`](INTERVIEW_PLAYBOOK.md) when practicing the verbal walkthrough.
+Start with the [`INTERVIEW_PLAYBOOK.md`](INTERVIEW_PLAYBOOK.md) when practicing the verbal walkthrough. Use [`DATABASE_SCHEMA.md`](DATABASE_SCHEMA.md) for the entity/table map.
 
 ## Modules
 
@@ -29,7 +29,7 @@ Every module is split into interview-friendly packages:
 controller/   HTTP endpoints
 dto/          request and response records
 model/        domain objects and enums
-repository/   in-memory persistence boundary
+repository/   in-memory persistence boundary plus JpaRepository interfaces
 service/      business logic
 client/       outbound REST clients, where needed
 filter/       HTTP filters, where needed
@@ -44,6 +44,8 @@ Each module also includes:
 ## Staff-Level Signals In The Code
 
 - Structured `ProblemDetail` API errors via `ApiExceptionHandler` classes.
+- JPA `@Entity`/`@Table` mappings with H2 database configuration in every module.
+- Spring Data `JpaRepository` interfaces for the persistent entities.
 - Configured outbound `RestClient` beans with connect/read timeouts.
 - Rate-limit 429 responses include retry headers and problem JSON.
 - Domain state transitions guard invalid operations such as reopening closed tickets or exiting a closed parking ticket.

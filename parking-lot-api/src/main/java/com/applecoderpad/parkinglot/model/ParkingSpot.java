@@ -1,12 +1,28 @@
 package com.applecoderpad.parkinglot.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.util.UUID;
 
+@Entity
+@Table(name = "parking_spots")
 public class ParkingSpot {
-  private final String id;
-  private final int floor;
-  private final SpotType type;
+  @Id private String id;
+
+  @Column(nullable = false)
+  private int floor;
+
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private SpotType type;
+
   private volatile UUID ticketId;
+
+  protected ParkingSpot() {}
 
   public ParkingSpot(String id, int floor, SpotType type) {
     this.id = id;

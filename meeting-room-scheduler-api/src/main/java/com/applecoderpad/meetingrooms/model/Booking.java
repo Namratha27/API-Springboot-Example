@@ -1,17 +1,42 @@
 package com.applecoderpad.meetingrooms.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.time.Instant;
 import java.util.UUID;
 
+@Entity
+@Table(name = "room_bookings")
 public class Booking {
-  private final UUID id;
-  private final String roomId;
-  private final String organizer;
-  private final String title;
-  private final int attendeeCount;
-  private final Instant start;
-  private final Instant end;
+  @Id private UUID id;
+
+  @Column(nullable = false)
+  private String roomId;
+
+  @Column(nullable = false)
+  private String organizer;
+
+  @Column(nullable = false)
+  private String title;
+
+  @Column(nullable = false)
+  private int attendeeCount;
+
+  @Column(name = "start_at", nullable = false)
+  private Instant start;
+
+  @Column(name = "end_at", nullable = false)
+  private Instant end;
+
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   private volatile BookingStatus status;
+
+  protected Booking() {}
 
   private Booking(
       UUID id,

@@ -1,18 +1,41 @@
 package com.applecoderpad.parkinglot.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
+@Entity
+@Table(name = "parking_tickets")
 public class ParkingTicket {
-  private final UUID id;
-  private final String licensePlate;
-  private final VehicleType vehicleType;
-  private final String spotId;
-  private final Instant openedAt;
+  @Id private UUID id;
+
+  @Column(nullable = false)
+  private String licensePlate;
+
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private VehicleType vehicleType;
+
+  @Column(nullable = false)
+  private String spotId;
+
+  @Column(nullable = false)
+  private Instant openedAt;
+
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   private volatile TicketStatus status;
+
   private volatile Instant closedAt;
   private volatile BigDecimal fee;
+
+  protected ParkingTicket() {}
 
   private ParkingTicket(UUID id, String licensePlate, VehicleType vehicleType, String spotId) {
     this.id = id;

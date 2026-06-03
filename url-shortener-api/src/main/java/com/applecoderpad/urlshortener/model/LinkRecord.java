@@ -1,15 +1,27 @@
 package com.applecoderpad.urlshortener.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.time.Instant;
-import java.util.concurrent.atomic.AtomicLong;
 
+@Entity
+@Table(name = "short_links")
 public class LinkRecord {
-  private final String code;
-  private final String originalUrl;
-  private final Instant createdAt;
-  private final Instant expiresAt;
-  private final AtomicLong clicks = new AtomicLong();
+  @Id private String code;
+
+  @Column(nullable = false, length = 2048)
+  private String originalUrl;
+
+  @Column(nullable = false)
+  private Instant createdAt;
+
+  private Instant expiresAt;
+  private long clicks;
   private volatile boolean disabled;
+
+  protected LinkRecord() {}
 
   public LinkRecord(String code, String originalUrl, Instant createdAt, Instant expiresAt) {
     this.code = code;
@@ -18,8 +30,8 @@ public class LinkRecord {
     this.expiresAt = expiresAt;
   }
 
-  public void incrementClicks() {
-    clicks.incrementAndGet();
+  public synchronized void incrementClicks() {
+    clicks++;
   }
 
   public void disable() {
@@ -43,7 +55,7 @@ public class LinkRecord {
   }
 
   public long clicks() {
-    return clicks.get();
+    return clicks;
   }
 
   public boolean disabled() {

@@ -13,6 +13,7 @@ Use this repo to show practical backend judgment, not just syntax. In a CoderPad
 ## Cross-Cutting Signals
 
 - API errors: return structured `ProblemDetail` responses for validation, conflicts, missing resources, expired links, and rate limits.
+- Persistence: map durable domain objects with `@Entity`, `@Table`, `@Id`, and Spring Data `JpaRepository` interfaces.
 - Idempotency: use client-provided keys for order and inventory retry safety.
 - Concurrency: protect aggregate state with locks or synchronized methods where in-memory state can be mutated.
 - Outbound calls: configure `RestClient` with timeouts and explain retries, circuit breakers, and dead-letter behavior.

@@ -1,15 +1,38 @@
 package com.applecoderpad.notification.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.util.UUID;
 
+@Entity
+@Table(name = "notification_deliveries")
 public class DeliveryRecord {
-  private final UUID id;
-  private final UUID notificationId;
-  private final Channel channel;
+  @Id private UUID id;
+
+  @Column(nullable = false)
+  private UUID notificationId;
+
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private Channel channel;
+
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   private volatile DeliveryStatus status;
+
   private volatile int attempts;
+
+  @Column(length = 512)
   private volatile String providerMessageId;
+
+  @Column(length = 1024)
   private volatile String lastError;
+
+  protected DeliveryRecord() {}
 
   private DeliveryRecord(UUID id, UUID notificationId, Channel channel) {
     this.id = id;

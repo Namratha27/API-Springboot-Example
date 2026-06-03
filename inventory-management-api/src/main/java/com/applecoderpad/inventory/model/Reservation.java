@@ -1,17 +1,38 @@
 package com.applecoderpad.inventory.model;
 
 import com.applecoderpad.inventory.dto.ReserveLine;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
+@Entity
+@Table(name = "inventory_reservations")
 public class Reservation {
-  private final UUID id;
-  private final String orderId;
-  private final List<ReserveLine> lines;
-  private final Instant createdAt;
-  private final Instant expiresAt;
+  @Id private UUID id;
+
+  @Column(nullable = false)
+  private String orderId;
+
+  @Transient private List<ReserveLine> lines = List.of();
+
+  @Column(nullable = false)
+  private Instant createdAt;
+
+  @Column(nullable = false)
+  private Instant expiresAt;
+
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   private volatile ReservationStatus status;
+
+  protected Reservation() {}
 
   private Reservation(UUID id, String orderId, List<ReserveLine> lines, Instant expiresAt) {
     this.id = id;

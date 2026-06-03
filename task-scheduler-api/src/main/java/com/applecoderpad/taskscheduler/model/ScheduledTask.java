@@ -1,21 +1,49 @@
 package com.applecoderpad.taskscheduler.model;
 
 import com.applecoderpad.taskscheduler.exception.ConflictException;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.time.Instant;
 import java.util.Map;
 import java.util.UUID;
 
+@Entity
+@Table(name = "scheduled_tasks")
 public class ScheduledTask {
-  private final UUID id;
-  private final String name;
-  private final Instant runAt;
-  private final int priority;
-  private final String callbackUrl;
-  private final Map<String, Object> payload;
-  private final Instant createdAt;
+  @Id private UUID id;
+
+  @Column(nullable = false)
+  private String name;
+
+  @Column(nullable = false)
+  private Instant runAt;
+
+  @Column(nullable = false)
+  private int priority;
+
+  @Column(length = 2048)
+  private String callbackUrl;
+
+  @Transient private Map<String, Object> payload = Map.of();
+
+  @Column(nullable = false)
+  private Instant createdAt;
+
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   private volatile TaskStatus status;
+
   private volatile int attempts;
+
+  @Column(length = 1024)
   private volatile String lastError;
+
+  protected ScheduledTask() {}
 
   private ScheduledTask(
       UUID id,

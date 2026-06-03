@@ -1,21 +1,50 @@
 package com.applecoderpad.fileupload.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.net.URI;
 import java.time.Instant;
 import java.util.UUID;
 import org.springframework.http.MediaType;
 
+@Entity
+@Table(name = "stored_uploads")
 public class StoredUpload {
-  private final UUID id;
-  private final String owner;
-  private final String filename;
-  private final String contentType;
-  private final long sizeBytes;
-  private final String checksum;
-  private final Instant createdAt;
+  @Id private UUID id;
+
+  @Column(nullable = false)
+  private String owner;
+
+  @Column(nullable = false)
+  private String filename;
+
+  @Column(nullable = false)
+  private String contentType;
+
+  @Column(nullable = false)
+  private long sizeBytes;
+
+  @Column(nullable = false, length = 96)
+  private String checksum;
+
+  @Column(nullable = false)
+  private Instant createdAt;
+
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   private volatile UploadStatus status;
-  private volatile URI objectUri;
+
+  @Column(length = 1024)
+  private volatile String objectUri;
+
+  @Column(length = 1024)
   private volatile String failureReason;
+
+  protected StoredUpload() {}
 
   private StoredUpload(
       UUID id, String owner, String filename, String contentType, long sizeBytes, String checksum) {
@@ -39,7 +68,7 @@ public class StoredUpload {
   }
 
   public synchronized void markAvailable(URI objectUri) {
-    this.objectUri = objectUri;
+    this.objectUri = objectUri == null ? null : objectUri.toString();
     status = UploadStatus.AVAILABLE;
   }
 
@@ -86,7 +115,7 @@ public class StoredUpload {
   }
 
   public URI objectUri() {
-    return objectUri;
+    return objectUri == null ? null : URI.create(objectUri);
   }
 
   public String failureReason() {

@@ -1,21 +1,47 @@
 package com.applecoderpad.orders.model;
 
 import com.applecoderpad.orders.dto.OrderLine;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
+@Entity
+@Table(name = "customer_orders")
 public class CustomerOrder {
-  private final UUID id;
-  private final String customerId;
-  private final List<OrderLine> lines;
-  private final BigDecimal totalAmount;
-  private final Instant createdAt;
+  @Id private UUID id;
+
+  @Column(nullable = false)
+  private String customerId;
+
+  @Transient private List<OrderLine> lines = List.of();
+
+  @Column(nullable = false, precision = 19, scale = 2)
+  private BigDecimal totalAmount;
+
+  @Column(nullable = false)
+  private Instant createdAt;
+
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   private volatile OrderStatus status;
+
   private volatile UUID inventoryReservationId;
+
+  @Column(length = 512)
   private volatile String paymentAuthorizationId;
+
+  @Column(length = 1024)
   private volatile String failureReason;
+
+  protected CustomerOrder() {}
 
   private CustomerOrder(UUID id, String customerId, List<OrderLine> lines, BigDecimal totalAmount) {
     this.id = id;
