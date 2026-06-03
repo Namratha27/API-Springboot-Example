@@ -36,3 +36,10 @@ curl http://localhost:8090/agents
 - Auto-assignment checks skill match and active capacity.
 - SLA escalation runs as a scheduled process.
 - Production systems need audit history, notifications, and search indexing.
+
+## Staff-Level Answer Outline
+
+- API: tickets have explicit lifecycle commands for create, assign, comment, and transition instead of a vague update endpoint.
+- Consistency: ticket state transitions guard invalid moves such as reopening a closed ticket.
+- Failure mode: skill mismatch and closed-ticket reopen attempts are conflict responses.
+- Production path: add audit events, search indexing, SLA policy tables, assignment queues, notifications, and metrics for backlog, breach rate, and agent load.

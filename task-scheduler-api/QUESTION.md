@@ -38,3 +38,10 @@ curl -X DELETE http://localhost:8085/tasks/<task-id>
 - Priority queue orders by due time and then priority.
 - Store tasks durably and use worker leases in production.
 - Callback delivery should use timeouts, retry policy, and dead-letter handling.
+
+## Staff-Level Answer Outline
+
+- API: scheduling returns a task resource that can be queried or canceled, which avoids waiting for execution inline.
+- Consistency: the task record and queue entry are separate concepts; production should use durable storage plus worker leases.
+- Failure mode: callback failures retry with backoff and stop after a bounded attempt count.
+- Production path: add lease renewal, dead-letter queues, idempotent callbacks, partitioned workers, and metrics for lag, retry count, and success rate.

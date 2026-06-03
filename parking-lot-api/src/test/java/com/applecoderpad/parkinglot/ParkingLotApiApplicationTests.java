@@ -1,10 +1,12 @@
 package com.applecoderpad.parkinglot;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.applecoderpad.parkinglot.dto.ExitResponse;
 import com.applecoderpad.parkinglot.dto.ParkVehicleRequest;
 import com.applecoderpad.parkinglot.dto.TicketResponse;
+import com.applecoderpad.parkinglot.exception.ConflictException;
 import com.applecoderpad.parkinglot.model.VehicleType;
 import com.applecoderpad.parkinglot.service.ParkingLotService;
 import org.junit.jupiter.api.Test;
@@ -21,5 +23,16 @@ class ParkingLotApiApplicationTests {
         parkingLot.park(new ParkVehicleRequest("ABC123", VehicleType.CAR, false));
     ExitResponse exit = parkingLot.exit(ticket.id());
     assertThat(exit.fee()).isPositive();
+  }
+
+  @Test
+  void rejectsDoubleExitForClosedTicket() {
+    TicketResponse ticket =
+        parkingLot.park(new ParkVehicleRequest("XYZ987", VehicleType.CAR, false));
+    parkingLot.exit(ticket.id());
+
+    assertThatThrownBy(() -> parkingLot.exit(ticket.id()))
+        .isInstanceOf(ConflictException.class)
+        .hasMessageContaining("already closed");
   }
 }

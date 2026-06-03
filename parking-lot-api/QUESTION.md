@@ -38,3 +38,10 @@ curl -X POST http://localhost:8086/parking/tickets/<ticket-id>/exit
 - Spot allocation is locked to avoid double assignment.
 - Add pricing strategies instead of hard-coded rates for production.
 - Persist open tickets and spot occupancy in a database.
+
+## Staff-Level Answer Outline
+
+- API: parking creates a ticket, exit closes the ticket, and availability is derived from spot state.
+- Consistency: allocation and exit are locked so two cars cannot take the same spot or close the same ticket twice.
+- Failure mode: no compatible spot and duplicate exit are conflict cases, not generic server failures.
+- Production path: add pricing strategy objects, persisted occupancy, payment integration, event audit, and floor/type indexes for fast allocation.

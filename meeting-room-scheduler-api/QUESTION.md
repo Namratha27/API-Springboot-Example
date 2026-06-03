@@ -36,3 +36,10 @@ curl -X POST http://localhost:8087/meeting-rooms/bookings -H 'Content-Type: appl
 - Interval overlap checks prevent double booking.
 - Room suggestions sort by smallest sufficient capacity.
 - Production designs need calendar sync, recurring rules, and optimistic locking.
+
+## Staff-Level Answer Outline
+
+- API: suggest and book are separate so clients can preview options without committing a booking.
+- Consistency: overlap detection runs under a lock in-memory; production should enforce it with transactions or optimistic locking.
+- Failure mode: invalid intervals and overlapping bookings return precise bad-request/conflict responses.
+- Production path: add recurring rules, external calendar sync, room blackouts, pagination, and indexes on room/start/end.

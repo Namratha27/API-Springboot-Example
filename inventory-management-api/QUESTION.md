@@ -36,3 +36,10 @@ curl -X POST http://localhost:8088/reservations/<reservation-id>/commit
 - Reserve before payment to avoid overselling.
 - Idempotency keys make retries safe.
 - Use database transactions and row-level locks in production.
+
+## Staff-Level Answer Outline
+
+- API: stock adjustment, reservation, release, and commit are separate commands because each has different invariants.
+- Consistency: reservation checks and stock mutation happen in one critical section to avoid oversell in-memory.
+- Failure mode: insufficient stock is a conflict; repeated client retries can reuse the idempotency key.
+- Production path: use database transactions, row-level locks or conditional writes, reservation expiry jobs, and metrics for low stock and failed reservations.

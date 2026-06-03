@@ -39,3 +39,10 @@ curl http://localhost:8083/notifications/<notification-id>
 - Provider clients use RestClient and can be wrapped with timeouts/circuit breakers.
 - Replace the in-memory queue with Kafka, SQS, or RabbitMQ for production.
 - Track delivery state per channel, not only per notification.
+
+## Staff-Level Answer Outline
+
+- API: a notification fans out into per-channel delivery records so one failed provider does not hide another channel's success.
+- Consistency: enqueue after persisting delivery records; production should use an outbox pattern to avoid lost work.
+- Failure mode: provider errors retry with backoff and eventually need dead-letter handling.
+- Production path: introduce templates, provider routing, idempotency keys, per-provider circuit breakers, and metrics for attempts, latency, and failure rate.

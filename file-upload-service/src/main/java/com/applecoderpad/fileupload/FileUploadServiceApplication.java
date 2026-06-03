@@ -1,8 +1,10 @@
 package com.applecoderpad.fileupload;
 
+import java.time.Duration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.client.RestClient;
 
@@ -15,6 +17,9 @@ public class FileUploadServiceApplication {
 
   @Bean
   RestClient restClient() {
-    return RestClient.create();
+    SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+    requestFactory.setConnectTimeout(Duration.ofSeconds(2));
+    requestFactory.setReadTimeout(Duration.ofSeconds(5));
+    return RestClient.builder().requestFactory(requestFactory).build();
   }
 }

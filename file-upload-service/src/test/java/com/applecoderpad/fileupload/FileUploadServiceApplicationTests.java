@@ -1,8 +1,10 @@
 package com.applecoderpad.fileupload;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.applecoderpad.fileupload.dto.UploadResponse;
+import com.applecoderpad.fileupload.exception.BadRequestException;
 import com.applecoderpad.fileupload.service.FileUploadService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,5 +23,14 @@ class FileUploadServiceApplicationTests {
     assertThat(response.id()).isNotNull();
     assertThat(response.filename()).isEqualTo("hello.txt");
     assertThat(uploads.get(response.id()).checksum()).isNotBlank();
+  }
+
+  @Test
+  void rejectsEmptyUploadBeforeQueueingWork() {
+    MockMultipartFile empty = new MockMultipartFile("file", "empty.txt", "text/plain", new byte[0]);
+
+    assertThatThrownBy(() -> uploads.accept(empty, "alice"))
+        .isInstanceOf(BadRequestException.class)
+        .hasMessageContaining("empty");
   }
 }

@@ -25,4 +25,17 @@ class OrderProcessingApiApplicationTests {
     assertThat(response.status()).isEqualTo(OrderStatus.ACCEPTED);
     assertThat(response.inventoryReservationId()).isNotNull();
   }
+
+  @Test
+  void idempotencyKeyReturnsSameOrder() {
+    CreateOrderRequest request =
+        new CreateOrderRequest(
+            "cust-idem", List.of(new OrderLine("WATCH", 1)), BigDecimal.valueOf(399));
+
+    OrderResponse first = orders.create("idem-key", request);
+    OrderResponse second = orders.create("idem-key", request);
+
+    assertThat(second.id()).isEqualTo(first.id());
+    assertThat(second.status()).isEqualTo(OrderStatus.ACCEPTED);
+  }
 }

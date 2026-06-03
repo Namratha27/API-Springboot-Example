@@ -1,9 +1,11 @@
 package com.applecoderpad.urlshortener;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.applecoderpad.urlshortener.dto.CreateLinkRequest;
 import com.applecoderpad.urlshortener.dto.LinkResponse;
+import com.applecoderpad.urlshortener.exception.ConflictException;
 import com.applecoderpad.urlshortener.service.LinkService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,5 +22,18 @@ class UrlShortenerApiApplicationTests {
     LinkResponse resolved = links.resolve(created.code());
     assertThat(resolved.originalUrl()).isEqualTo("https://developer.apple.com");
     assertThat(resolved.clicks()).isEqualTo(1);
+  }
+
+  @Test
+  void rejectsDuplicateCustomAlias() {
+    links.create(new CreateLinkRequest("https://developer.apple.com/news", "apple-news", null));
+
+    assertThatThrownBy(
+            () ->
+                links.create(
+                    new CreateLinkRequest(
+                        "https://developer.apple.com/videos", "apple-news", null)))
+        .isInstanceOf(ConflictException.class)
+        .hasMessageContaining("already exists");
   }
 }

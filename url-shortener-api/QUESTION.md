@@ -45,3 +45,10 @@ curl -X DELETE http://localhost:8082/links/appledocs
 - Cache hot short codes at the edge or in Redis.
 - Store click analytics asynchronously to keep redirects fast.
 - Use permanent or temporary redirects deliberately.
+
+## Staff-Level Answer Outline
+
+- API: separate link creation/inspection endpoints from the redirect endpoint so operational reads do not slow redirects.
+- Consistency: custom aliases use uniqueness checks; production should enforce that with a database unique index.
+- Failure mode: disabled or expired links return explicit gone/not-found semantics instead of silently redirecting.
+- Production path: cache hot codes, shard by code prefix, write analytics asynchronously, and protect creation with rate limits.
