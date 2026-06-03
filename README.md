@@ -8,16 +8,36 @@ This repo favors code you can explain under interview pressure: clear domain mod
 
 | Prompt | Module | Port | Main Concepts |
 | --- | --- | ---: | --- |
-| Design a File Upload Service | [`file-upload-service`](file-upload-service) | 8081 | multipart API, async processing, scanner/storage gateway |
-| Design URL Shortener API | [`url-shortener-api`](url-shortener-api) | 8082 | REST, redirects, cache-friendly lookups, collision handling |
-| Notification Service | [`notification-service`](notification-service) | 8083 | queues, retries, channel strategy, provider API calls |
-| Rate Limiter | [`rate-limiter-api`](rate-limiter-api) | 8084 | filter, token bucket, thread safety, Redis-ready design |
-| Task Scheduler | [`task-scheduler-api`](task-scheduler-api) | 8085 | priority queue, worker loop, callbacks, cancellation |
-| Parking Lot | [`parking-lot-api`](parking-lot-api) | 8086 | LLD, allocation strategy, tickets, pricing |
-| Meeting Room Scheduler | [`meeting-room-scheduler-api`](meeting-room-scheduler-api) | 8087 | intervals, conflict detection, room suggestions |
-| Inventory Management API | [`inventory-management-api`](inventory-management-api) | 8088 | CRUD, stock reservations, idempotency, expiry |
-| Order Processing System | [`order-processing-api`](order-processing-api) | 8089 | state machine, inventory/payment clients, compensation |
-| Customer Support Ticket System | [`customer-support-ticket-api`](customer-support-ticket-api) | 8090 | ticket lifecycle, assignment, SLA escalation |
+| Design a File Upload Service | [`file-upload-service`](file-upload-service/QUESTION.md) | 8081 | multipart API, async processing, scanner/storage gateway |
+| Design URL Shortener API | [`url-shortener-api`](url-shortener-api/QUESTION.md) | 8082 | REST, redirects, cache-friendly lookups, collision handling |
+| Notification Service | [`notification-service`](notification-service/QUESTION.md) | 8083 | queues, retries, channel strategy, provider API calls |
+| Rate Limiter | [`rate-limiter-api`](rate-limiter-api/QUESTION.md) | 8084 | filter, token bucket, thread safety, Redis-ready design |
+| Task Scheduler | [`task-scheduler-api`](task-scheduler-api/QUESTION.md) | 8085 | priority queue, worker loop, callbacks, cancellation |
+| Parking Lot | [`parking-lot-api`](parking-lot-api/QUESTION.md) | 8086 | LLD, allocation strategy, tickets, pricing |
+| Meeting Room Scheduler | [`meeting-room-scheduler-api`](meeting-room-scheduler-api/QUESTION.md) | 8087 | intervals, conflict detection, room suggestions |
+| Inventory Management API | [`inventory-management-api`](inventory-management-api/QUESTION.md) | 8088 | CRUD, stock reservations, idempotency, expiry |
+| Order Processing System | [`order-processing-api`](order-processing-api/QUESTION.md) | 8089 | state machine, inventory/payment clients, compensation |
+| Customer Support Ticket System | [`customer-support-ticket-api`](customer-support-ticket-api/QUESTION.md) | 8090 | ticket lifecycle, assignment, SLA escalation |
+
+## Folder Layout
+
+Every module is split into interview-friendly packages:
+
+```text
+controller/   HTTP endpoints
+dto/          request and response records
+model/        domain objects and enums
+repository/   in-memory persistence boundary
+service/      business logic
+client/       outbound REST clients, where needed
+filter/       HTTP filters, where needed
+exception/    API exceptions and response statuses
+```
+
+Each module also includes:
+
+- `QUESTION.md` with the prompt, run command, curl commands, and talking points.
+- A small Spring Boot test that exercises one core behavior.
 
 ## Run
 
